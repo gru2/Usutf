@@ -12,22 +12,19 @@ int bar(int x)
 	return x + x;
 }
 
-USUTF_REGISTER_TEST(testFoo)
+USUTF_TEST(testFoo)
 {
-	USUTF_EXPECT_TRUE(foo(4) == 5);
+	Usutf::test(foo(3) == 4);
+	Usutf::test(foo(7) == 8);
 }
 
-USUTF_REGISTER_TEST(testBar)
+USUTF_TEST(testBar)
 {
-	USUTF_EXPECT_TRUE(bar(4) == 8);
-	USUTF_EXPECT_TRUE(bar(7) == 13);
-	USUTF_EXPECT_TRUE(bar(0) == 0);
-	USUTF_EXPECT_TRUE(bar(5) == 11);
+	Usutf::test(bar(7) == 14);
 }
 
 int main(int argc, char *argv[])
 {
-	USUTF_RUN_TEST(testFoo);
-	USUTF_RUN_TEST(testBar);
-	return Usutf::getExitCode();
+	int exitCode = Usutf::runTests(argc, argv);
+	return exitCode;
 }

@@ -1,37 +1,43 @@
-#ifndef __SUTF_H
-#define __SUTF_H
+#ifndef __USUTF_H
+#define __USUTF_H
 
 #include <string>
-#include <iostream>
 
-#define USUTF_REGISTER_TEST(x) \
+#define USUTF_TEST(x) \
+void x(); \
+static Usutf::Initializer initializer##x(x, #x); \
 void x()
 
-#define USUTF_EXPECT_TRUE(x) Usutf::test(x)
+namespace Usutf
+{
 
-#define USUTF_RUN_TEST(x) \
-{ \
-	void x(); \
-	int oldFailCount = Usutf::failCount; \
-	std::cout << "Running test " << #x << "\n"; \
-	Usutf::internalTestCount = 0; \
-	x(); \
-	if (oldFailCount == Usutf::failCount) \
-		std::cout << "PASSED\n"; \
-	else \
-		std::cout << "FAILED\n"; \
-}
+typedef void (*TestType)();
 
-class Usutf
+class Initializer
 {
 public:
-	static void test(bool result);
-	static void printRapport();
-	static int getExitCode();
-	static int failCount;
-	static int passCount;
-	static int internalTestCount;
+	Initializer(TestType x, const std::string &name);
+
+	static Initializer *getTests();
+	static void setLastTest(const std::string &name);
+	static Initializer **findTest(const std::string &name);
+
+	TestType getTest() const { return test; }
+	void setTest(TestType x) { test = x; }
+	Initializer *getNextTest() const { return nextTest; }
+	std::string &getTestName() { return testName; }
+protected:
+	static Initializer *tests;
+	Initializer *nextTest;
+	TestType test;
+	std::string testName;
 };
 
-#endif
+void test(bool result);
+void test(bool result, const std::string &msg);
 
+int runTests(int argc, char *argv[]);
+int getExitCode();
+}
+
+#endif
