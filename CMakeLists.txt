@@ -9,10 +9,9 @@ set(SOURCE_FILES Usutf.cpp)
 
 set(HEADER_FILES Usutf.h)
 
-include_directories(.)
-
 add_library(Usutf STATIC ${SOURCE_FILES} ${HEADER_FILES})
 set_property(TARGET Usutf PROPERTY POSITION_INDEPENDENT_CODE ON)
+target_include_directories(Usutf PUBLIC .)
 
 add_executable(UsutfTest UsutfTest.cpp ${HEADER_FILES})
 target_link_libraries(UsutfTest Usutf)
